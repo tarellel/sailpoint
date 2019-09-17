@@ -1,0 +1,28 @@
+image: "ruby:2.6-slim"
+
+# Used for caching APT && bundle install
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - cache/apt
+    - cache
+
+# Build essential is required by a few of the ruby gems
+before_script:
+  - mkdir -p cache/apt
+  - apt-get -o dir::cache::archives="cache/apt" -qq update && apt-get -o dir::cache::archives="cache/apt" -qq install -y build-essential
+  - ruby -v
+  - which ruby
+  - gem update --system && gem install bundler --no-document --quiet
+  - bundle install --jobs $(nproc) --retry=3 --quiet
+
+rspec:
+  script:
+    - bundle exec rspec
+  artifacts:
+    paths:
+      - coverage/
+
+rubocop:
+  script:
+    - bundle exec rubocop
