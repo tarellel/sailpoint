@@ -2,6 +2,8 @@
 
 This is an unofficial tool for interactiving with Sailpoints [IdentityIQ's](https://www.sailpoint.com/solutions/identityiq/?elqct=Website&elqchannel=OrganicDirect) API interface. This gem assumes your IdenityIQ API is setup to authenticate using [BasicAuth](https://developer.sailpoint.com/SCIM/index.html#authentication) headers. If you require credentials for your SailPoint (IdenitityIQ) interface, I suggest contacting your system administrator before continuing any farther.
 
+**Note:** This gem doesn't include all possible IdentityIQ API requests, primarmly due to last of authorization to access much else. If you happen to have additional access to an IdentitiyIQ API it would be very much appreciated if you contributed any additional API requests.
+
 ## Installation
 
 Add this line to your application's Gemfile:
