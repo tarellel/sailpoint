@@ -1,4 +1,8 @@
+
 # Sailpoint
+
+![Gem Version](https://img.shields.io/gem/v/sailpoint "SailPoint Gem version")  [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+
 
 This is an unofficial tool for interactiving with Sailpoints [IdentityIQ's](https://www.sailpoint.com/solutions/identityiq/?elqct=Website&elqchannel=OrganicDirect) API interface. This gem assumes your IdenityIQ API is setup to authenticate using [BasicAuth](https://developer.sailpoint.com/SCIM/index.html#authentication) headers. If you require credentials for your SailPoint (IdenitityIQ) interface, I suggest contacting your system administrator before continuing any farther.
 
