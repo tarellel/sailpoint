@@ -26,8 +26,7 @@ module Sailpoint
     # Used to fetch the specified users associated data
     # @return [Hash] - The users hashed data attributes
     def self.get_user(identity)
-      puts [Sailpoint::Config.url('scim'), 'v2/Users', identity].join('/')
-      response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Users', identity].join('/'),
+      response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Users', identity.escape_str].join('/'),
                               headers: Sailpoint::Config.auth_header,
                               output: 'json')
       # NOTE: If invalid credentials are supplied or the user could not be found response bodies contain a status code.

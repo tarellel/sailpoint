@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sailpoint (0.0.1)
+    sailpoint (0.0.2)
       httparty (~> 0.17.0)
 
 GEM

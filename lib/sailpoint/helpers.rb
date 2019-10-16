@@ -11,6 +11,10 @@ class String
   def present?
     !self.nil?
   end
+
+  def escape_str
+    CGI.escape(self)
+  end
 end
 
 # Used to printout a [Red] message to STDOUT in case you want to print a message without causing an Exception.

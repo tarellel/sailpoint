@@ -45,11 +45,15 @@ module Sailpoint
       end
 
       # Used for fetching the requesting users entire URL (Host+Interface)
-      # @param interface [String] - used for when the user is specicically calling an API such as <code>Sailpoint::Scim.get_user('username')</code>
+      # @param interface [String] - used for when the user is specicically calling an API such as <code>Unmh::Sailpoint::Scim.get_user('brhicks')</code>
       # @return [String] - Returns the entire requesting URL (based on host and interface type)
       def url(interface = '')
         return '' if @host.blank? || @interface.blank?
 
+        full_host(interface)
+      end
+
+      def full_host(interface = '')
         interface.blank? ? [trimmed_host, 'identityiq', interface_path].join('/') : [trimmed_host, 'identityiq', interface].join('/')
       end
 

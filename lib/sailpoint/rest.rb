@@ -25,7 +25,7 @@ module Sailpoint
 
       # the roles attribute should either be 'Contractor,Assistant' or ['Contractor', 'Assistant']
       roles = roles.join(',') if roles.is_a?(Array)
-      response = HTTParty.get([Sailpoint::Config.url('rest'), "policies/checkRolePolicies?identity=#{identity}&roles=#{roles}"].join('/'),
+      response = HTTParty.get([Sailpoint::Config.url('rest'), "policies/checkRolePolicies?identity=#{identity.escape_str}&roles=#{roles}"].join('/'),
                               headers: Sailpoint::Config.auth_header,
                               output: 'json')
       JSON.parse(response&.body || '{}')
@@ -35,7 +35,7 @@ module Sailpoint
     # @param identity [String] - The user in which you are requesting data for
     # @return [Hash] - If no user if found an empty hash will be returned. If a a user is found, their parsed JSON will be returned as a result
     def self.get_identity(identity)
-      response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity, 'managedIdentities'].join('/'),
+      response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity.escape_str, 'managedIdentities'].join('/'),
                               headers: Sailpoint::Config.auth_header,
                               output: 'json')
       return [] if response.code == '500'
@@ -47,7 +47,7 @@ module Sailpoint
     # @param identity [String] - The user in which you are requesting data for
     # @return [Hash] - If no user if found an empty hash will be returned. If a a user is found, their parsed JSON will be returned as a result
     def self.get_user(identity)
-      response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity].join('/'),
+      response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity.escape_str].join('/'),
                               headers: Sailpoint::Config.auth_header,
                               output: 'json')
       raise AuthenticationException, 'Invalid credentials, please try again.' if response.code == 401
@@ -61,7 +61,7 @@ module Sailpoint
       # Before requesting a users roles we need to verify if the identiy matches a valid user first
       return {} if identity.blank? || get_user(identity).empty?
 
-      response = HTTParty.get([Sailpoint::Config.url('rest'), "roles/assignablePermits/?roleMode=assignable&identity=#{identity}"].join('/'),
+      response = HTTParty.get([Sailpoint::Config.url('rest'), "roles/assignablePermits/?roleMode=assignable&identity=#{identity.escape_str}"].join('/'),
                               headers: Sailpoint::Config.auth_header,
                               output: 'json')
       response_body = JSON.parse(response&.body || '{}')
