@@ -37,7 +37,7 @@ module Sailpoint
     def self.get_identity(identity)
       response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity.escape_str, 'managedIdentities'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       return [] if response.code == '500'
 
       JSON.parse(response&.body || '{}').first
@@ -49,7 +49,7 @@ module Sailpoint
     def self.get_user(identity)
       response = HTTParty.get([Sailpoint::Config.url('rest'), 'identities', identity.escape_str].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       raise AuthenticationException, 'Invalid credentials, please try again.' if response.code == 401
 
       JSON.parse(response&.body || '{}')
@@ -63,7 +63,7 @@ module Sailpoint
 
       response = HTTParty.get([Sailpoint::Config.url('rest'), "roles/assignablePermits/?roleMode=assignable&identity=#{identity.escape_str}"].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       response_body = JSON.parse(response&.body || '{}')
       return response_body['objects'].map { |role| role['name'] } if response['status'].present? && response['status'] == 'success'
 
@@ -75,7 +75,7 @@ module Sailpoint
     def self.ping
       HTTParty.get([Sailpoint::Config.url('rest'), 'ping'].join('/'),
                    headers: Sailpoint::Config.auth_header,
-                   output: 'json')
+                   output: 'json', timeout: 10)
     end
   end
 end

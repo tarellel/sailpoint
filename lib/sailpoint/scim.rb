@@ -10,7 +10,7 @@ module Sailpoint
     def self.accounts
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Accounts'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -19,7 +19,7 @@ module Sailpoint
     def self.applications
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Applications'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -28,7 +28,7 @@ module Sailpoint
     def self.get_user(identity)
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Users', identity.escape_str].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       # NOTE: If invalid credentials are supplied or the user could not be found response bodies contain a status code.
       # => But if a a user if found, a status code isn't returned, but all of their data attributes are returned instead.
       raise AuthenticationException, 'Invalid credentials, please try again.' if response.body['status'] && response.body['status'] == '401'
@@ -42,7 +42,7 @@ module Sailpoint
     def self.resource_types
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/ResourceTypes'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -51,7 +51,7 @@ module Sailpoint
     def self.schemas
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Schemas'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -60,7 +60,7 @@ module Sailpoint
     def self.service_providers
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/ServiceProviderConfig'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -69,7 +69,7 @@ module Sailpoint
     def self.users
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/Users'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
 
@@ -78,7 +78,7 @@ module Sailpoint
     def self.user_resource_types
       response = HTTParty.get([Sailpoint::Config.url('scim'), 'v2/ResourceTypes/User'].join('/'),
                               headers: Sailpoint::Config.auth_header,
-                              output: 'json')
+                              output: 'json', timeout: 10)
       JSON.parse(response&.body || '{}')
     end
   end
