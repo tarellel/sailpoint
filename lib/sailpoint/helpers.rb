@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Used to override and give String the blank? validation similar to Rails
 class String
   # Used to determine if the object is nil or empty ('')

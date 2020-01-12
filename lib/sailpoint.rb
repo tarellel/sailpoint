@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sailpoint/version'
 require 'sailpoint/config'
 require 'sailpoint/helpers' # To override defaults and adding global helper functions
