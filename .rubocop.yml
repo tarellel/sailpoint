@@ -3,6 +3,7 @@ require:
   - rubocop-rspec
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6
   Exclude:
     - '.bundle/*'
@@ -23,6 +24,10 @@ AllCops:
     - '**/*.tt'
     - '**.yml'
   # UseCache: true
+
+Layout/LineLength:
+  AllowURI: true
+  Enabled: false
 Metrics/AbcSize:
   Max: 42
   Enabled: false
@@ -30,9 +35,6 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Max: 12
-  Enabled: false
-Metrics/LineLength:
-  AllowURI: true
   Enabled: false
 Metrics/MethodLength:
   CountComments: false

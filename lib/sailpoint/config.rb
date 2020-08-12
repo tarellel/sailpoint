@@ -83,7 +83,7 @@ module Sailpoint
       def trimmed_host
         return '' if @host.blank?
 
-        @host.strip.gsub!(%r{\/?++$}, '')
+        @host.strip.gsub!(%r{/?++$}, '')
       end
 
       # SailPoints auth requires a Base64 string of (username:password)
