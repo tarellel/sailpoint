@@ -32,9 +32,8 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = %w[README.md LICENSE.txt]
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'httparty', '~> 0.17.0'
-
+  spec.add_dependency 'httparty', '~> 0.18'
   spec.add_development_dependency 'bundler', '>= 1.17', '< 3.0'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rspec', '~> 3.8.0'
+  spec.add_development_dependency 'rake', '~> 13'
+  spec.add_development_dependency 'rspec', '~> 3.9'
 end
