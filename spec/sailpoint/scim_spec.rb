@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Sailpoint::Scim do
-  context 'when accounts' do
-
+  describe 'when nil' do
+    it { expect(nil).to be_falsy }
   end
 end

@@ -46,24 +46,23 @@ If running from `irb` or wanting to call the IdentityIQ API from a ruby script u
 require 'sailpoint'
 
 # In order to make any API requests you need to specify the IdentityIQ API Host and set you API credentials
-Sailpoint.set_credentials('foo','bar')
-Sailpoint.set_host = 'https://example.com/';
-Sailpoint.get_user('sample_user')
+Sailpoint.configure do |config|
+  config.username = 'api_username'
+  config.password = 'api_password'
+  config.host = 'https://example.com'
+end
 ```
-
-## Getting Started
 
 By default this will pull users from the REST API
 If you want to pull from the SCIM API there are a number of ways to do this as well
 
 ```ruby
 # First method
-Sailpoint.get_user('sample_user', interface: 'scim')
+Sailpoint.get_user('sample_user')
 
 # Second method
 # Note: When reassigning the API interface future queries will hit the new API endpoint unless specified
-Sailpoint::Config.interface = 'scim'
-Sailpoint.get_user('sample_user')
+Sailpoint::Rest.get_user('sample_user')
 
 # Third method (and my personal favorite to use without assigning the interface)
 Sailpoint::Scim.get_user('sample_user')
@@ -76,53 +75,47 @@ Lets first start by creating an initializer so you don't have to set the API con
 ```ruby
 # config/initializers/sailpoint.rb
 if defined?(Sailpoint)
-  Sailpoint::Config.set_credentials('api_username', 'api_password')
-  Sailpoint::Config.host = 'http://example.com/'
-end
-
-# If you're using encrypted credentials
-if defined?(Sailpoint)
-  Sailpoint::Config.set_credentials(Rails.application.credentials[:sailpoint][:username], Rails.application.credentials[:sailpoint][:password])
-  Sailpoint::Config.host = 'http://example.com/'
+  Sailpoint.configure do |config|
+    config.username = 'api_username'
+    config.password = 'api_password'
+    config.host = 'https://example.com'
+  end
 end
 ```
 
-Now in your controller, models, or wherever required you should be able to make an API request with the following command
+# If you're using encrypted credentials
+
+```ruby
+if defined?(Sailpoint)
+  Sailpoint.configure do |config|
+    config.username = Rails.application.credentials[:sailpoint][:username]
+    config.password = Rails.application.credentials[:sailpoint][:password]
+    config.host = 'https://example.com'
+  end
+end
+```
+
+Now in your controller or models you should be able to make an API request with the following command
 
 ```ruby
 Sailpoint.get_user('sample_user')
 ```
 
-# Misc
-
-```ruby
-Sailpoint::Config.set_credentials('api_username', 'api_password'); Sailpoint::Config.host = 'http://example.com/';
-# Sailpoint::Config.interface = 'rest'
-# Sailpoint::Config.interface = 'scim'
-Sailpoint.get_user('username')
-```
-
 ## General function calls
 
-Listed below are the majority of the functions used throughout the library and their intended purpose.
-
 * `Sailpoint.get_user(identity)` - Search the API resources for the specified user identity
-* `Sailpoint.set_credentials(username, password)` - Assign the credentials for accessing the IdentityIQ API
-* `Sailpoint.set_host(host)` - Assign the IdentityIQ API base URL
 
 ## Configuration
 
-* `Sailpoint::Config.auth_header` - Returns the BasicAuth Header for creating and API request
-* `Sailpoint::Config.credentials` - A hash containing the API credentials when setting API requests headers
-* `Sailpoint::Config.hashed_credentials` - A Base64 encoded string for the API request
-* `Sailpoint::Config.host` - Returns the API base host
-* `Sailpoint::Config.interface` - Returns the specified API interface (REST || SCIM)
-* `Sailpoint::Config.interface_path` - Returns the API path dependant on the interface
-* `Sailpoint::Config.password` - Returns the API password specified
-* `Sailpoint::Config.set_credentials(username, password)` - Used for assigning credentials for accessing the IndentityIQ API
-* `Sailpoint::Config.trimmed_host` - Returns the API base host with all trailing whitespace and slashs trimmed
-* `Sailpoint::Config.url` - Returns the full API URL based on the `host+interface`
-* `Sailpoint::Config.username` - If set, it returns the username credentials for API
+* `Sailpoint.config.auth_header` - Returns the BasicAuth Header for creating and API request (if the username/password have been set)
+* `Sailpoint.config.credentials` - A hash containing the API credentials when setting API requests headers
+* `Sailpoint.config.hashed_credentials` - A Base64 encoded string for the API request
+* `Sailpoint.config.host` - Returns the API base host
+* `Sailpoint.config.interface` - Returns the specified API interface (REST || SCIM)
+* `Sailpoint.config.interface_path` - Returns the API path dependant on the interface
+* `Sailpoint.config.password` - Returns the API password specified
+* `Sailpoint.config.url` - Returns the full API URL based on the `host+interface`
+* `Sailpoint.config.username` - If set, it returns the username credentials for API
 
 ## Interface specific function calls
 
@@ -145,6 +138,11 @@ Listed below are the majority of the functions used throughout the library and t
 * `Sailpoint::Rest.get_user(identity)` - Used to fetch the specified users associated data
 * `Sailpoint::Rest.permitted_roles(identity)` - Get a users roles within the Organization
 * `Sailpoint::Rest.ping` - Used to verify your credentials are valid and IdentityIQ reource is properly responding
+
+```shell
+# Rebuilding the gem to test in a required IRB term
+gem uninstall sailpoint; rm -rf sailpoint-0.1.0.gem; gem build; gem install sailpoint
+```
 
 ## API Documentation
 

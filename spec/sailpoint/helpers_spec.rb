@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-RSpec.describe 'Helper Functions' do
-  context 'when string' do
-    it 'when assigned empty' do
-      expect(''.blank?).to eq(true)
-      expect(''.present?).to eq(true)
-    end
+RSpec.describe Sailpoint::Helpers do
+  context 'when string assigned empty values' do
+    it { expect(''.blank?).to eq(true) }
+    it { expect(''.present?).to eq(false) }
   end
 
   context 'when nil' do
@@ -14,7 +14,6 @@ RSpec.describe 'Helper Functions' do
   end
 
   context 'when numeric' do
-
     it { expect(1.blank?).to eq(false) }
     it { expect(1.present?).to eq(true) }
   end
@@ -26,17 +25,19 @@ RSpec.describe 'Helper Functions' do
 
   context 'when array' do
     it { expect([].blank?).to eq(true) }
-    it { expect(['abc', '123'].blank?).to eq(false) }
+    it { expect(%w[abc 123].blank?).to eq(false) }
   end
 
   context 'when printing exception' do
-    it { expect { print_exception('FooBar') }.to output.to_stdout }
+    it { expect { described_class.print_exception('FooBar') }.to output.to_stdout }
   end
 
   context 'when AuthenticationException' do
-    before(:each){ @auth =  AuthenticationException.new('foobar') }
+    let!(:auth) do
+      Sailpoint::Helpers::AuthenticationException.new('foobar')
+    end
 
-    it { expect(@auth.data).to eq('foobar') }
-    it { expect(@auth.message).to eq('foobar') }
+    it { expect(auth.data).to eq('foobar') }
+    it { expect(auth.message).to eq('foobar') }
   end
 end

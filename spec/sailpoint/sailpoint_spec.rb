@@ -1,78 +1,98 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Sailpoint do
-  before(:each) do
-    Sailpoint::Config.host = nil
-    Sailpoint::Config.username = nil
-    Sailpoint::Config.password = nil
+  before do
+    described_class.config.host = nil
+    described_class.config.username = nil
+    described_class.config.password = nil
   end
 
   context 'when setting credentails' do
     describe 'with valid credentails' do
-      before(:each){ Sailpoint.set_credentials('admin', 'password') }
+      before do
+        described_class.configure do |config|
+          config.username = 'admin'
+          config.password = 'password'
+        end
+      end
 
-      it { expect(Sailpoint::Config.username).to eq('admin') }
-      it { expect(Sailpoint.valid_credentials?).to eq(true) }
+      it { expect(described_class.config.username).to eq('admin') }
+      it { expect(described_class.valid_credentials?).to eq(true) }
     end
 
     describe 'with blank values' do
-      before(:each){ Sailpoint.set_credentials('', '') }
+      before do
+        described_class.config.username = ''
+        described_class.config.password = ''
+      end
 
-      it { expect(Sailpoint.valid_credentials?).to eq(false)}
+      it { expect(described_class.valid_credentials?).to eq(false) }
     end
   end
 
   context 'when setting host' do
     describe 'when invalid' do
-      before(:each) { Sailpoint.set_host('') }
-      it { expect(Sailpoint::Config.host).to be_empty }
+      it { expect(described_class.config.host).to be_falsey }
     end
 
     describe 'when valid' do
-      before(:each) { Sailpoint.set_host('http://example.com/') }
-      it { expect(Sailpoint::Config.host).to eq('http://example.com')}
+      before { described_class.config.host = 'http://example.com/' }
+
+      it { expect(described_class.config.host).to eq('http://example.com') }
     end
   end
 
-  context 'validate credentails' do
+  context 'when validate credentails' do
     describe 'when valid credentials are set' do
-      before(:each) { Sailpoint::Config.set_credentials('admin', 'password') }
-      it { expect(Sailpoint::Config.username).to eq('admin') }
-      it { expect(Sailpoint::Config.password).to eq('password') }
-      it { expect(Sailpoint.valid_credentials?).to eq(true) }
+      before do
+        described_class.configure do |config|
+          config.username = 'admin'
+          config.password = 'password'
+        end
+      end
+
+      it { expect(described_class.config.username).to eq('admin') }
+      it { expect(described_class.config.password).to eq('password') }
+      it { expect(described_class.valid_credentials?).to eq(true) }
     end
 
-    describe ' when invalid credentails are set' do
-      before(:each) { Sailpoint::Config.set_credentials('', nil) }
-      it { expect(Sailpoint.valid_credentials?).to eq(false) }
+    describe 'when invalid credentails are set' do
+      before do
+        described_class.config.username = nil
+        described_class.config.password = nil
+      end
+
+      it { expect(described_class.valid_credentials?).to eq(false) }
     end
   end
-
 
   describe 'validate URL' do
-    subject { Sailpoint.valid_url? }
+    subject { described_class.valid_url? }
 
     it { is_expected.to eq(false) }
+
     it 'when valid' do
-      Sailpoint::Config.host = 'http://example.com'
-      expect(Sailpoint.valid_url?).to eq(true)
+      described_class.config.host = 'http://example.com'
+      expect(described_class.valid_url?).to eq(true)
     end
   end
 
-  context 'validate interface type' do
+  context 'when validating interface type' do
     describe 'when SCIM' do
-      it { expect(Sailpoint.valid_interface_type?('scim')).to eq(true) }
+      it { expect(described_class.valid_interface_type?('scim')).to eq(true) }
     end
 
     describe 'when Invalid match' do
-      it { expect(Sailpoint.valid_interface_type?('foobar')).to eq(false) }
+      it { expect(described_class.valid_interface_type?('foobar')).to eq(false) }
     end
   end
 
-  context 'get_user' do
+  context 'when calling get_user' do
     describe 'when invalidate arguements' do
-      it { expect { Sailpoint.get_user }.to raise_error(ArgumentError) }
-      it { expect { Sailpoint.get_user('foobar') }.to raise_error(ArgumentError) }
+      it { expect { described_class.get_user }.to raise_error(ArgumentError) }
+      it { expect { described_class.get_user('foobar') }.to raise_error(ArgumentError) }
     end
   end
 end
